@@ -18,12 +18,15 @@ class Conductor
   end
 
   def log_call(duration, incoming_phone_number, recipient_phone_number)
-    @switchvox = switchvox_login()
+    #TODO: Log the call as a completed task in Salesforce, attached to the contact record of the caller
+    #make sure that this returns the task_id from Salesforce 
     
-    initiate_dictation(@switchvox, recipient_phone_number)
+    @switchvox = switchvox_login()
+    initiate_dictation(@switchvox, recipient_phone_number, incoming_phone_number)
   end
 
-  def initiate_dictation(switchvox, recipient_number)
+  def initiate_dictation(switchvox, recipient_number, incoming_phone_number)
+    # TODO:  Set an task_id variable in the request to the task id returned from salesforce 
     switchvox.request("switchvox.call", { :dial_first  => recipient_number,
                                           :dial_second => DICTATION_IVR })
   end
@@ -33,3 +36,8 @@ class Conductor
   end
 
 end
+
+# Some notes:
+#
+# The upload action should handle setting the follow up task given the number of days that the callee
+# sets as the desired duration until the followup.  This will be creating a new task in Salesforce.
